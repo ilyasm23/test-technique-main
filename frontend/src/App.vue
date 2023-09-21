@@ -1,3 +1,3 @@
 <template>
-  <div>Good luck !</div>
+  <router-view />
 </template>
