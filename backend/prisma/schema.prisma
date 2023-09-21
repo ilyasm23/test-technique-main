@@ -1,0 +1,16 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./todolist.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  // previewFeatures = []
+}
+
+model Todo {
+  id    Int     @id @default(autoincrement())
+  name String  @unique
+  deadline  DateTime @default(now())
+  employee String
+}
