@@ -13,10 +13,10 @@
 
 <script lang="ts">
 export default {
-  name: "LayoutComponent",
+  name: 'LayoutComponent',
   setup() {
     const handleLogout = (): void => {
-      console.log("Logging out...");
+      console.log('Logging out...');
     };
     return { handleLogout };
   },

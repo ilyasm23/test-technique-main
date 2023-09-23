@@ -27,8 +27,8 @@
 </template>
 
 <script lang="ts">
-import { PropType } from "vue";
-import { translatePriority } from "../utils/functions";
+import { PropType } from 'vue';
+import { translatePriority } from '../utils/functions';
 
 interface Todo {
   id: string;
@@ -39,7 +39,7 @@ interface Todo {
 }
 
 export default {
-  name: "TodoComponent",
+  name: 'TodoComponent',
   props: {
     todo: {
       type: Object as PropType<Todo>,
@@ -48,7 +48,7 @@ export default {
   },
   setup() {
     const deleteTodo = (id: number): void => {
-      console.log("Deleted Todo: " + id);
+      console.log('Deleted Todo: ' + id);
     };
 
     return {

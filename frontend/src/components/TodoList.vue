@@ -89,8 +89,8 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
-import TodoComponent from "./TodoComponent.vue";
+import { ref } from 'vue';
+import TodoComponent from './TodoComponent.vue';
 
 interface FormValues {
   title: string | null;
@@ -105,47 +105,47 @@ interface PriorityItem {
 }
 
 export default {
-  name: "TodoList",
+  name: 'TodoList',
   components: { TodoComponent },
   setup() {
     // Data
     const todos = ref([
       {
         id: 1,
-        title: "Learn Vue 3",
-        content: "Vue 3 course",
-        priority: "high",
-        executionDate: "2023-09-26",
+        title: 'Learn Vue 3',
+        content: 'Vue 3 course',
+        priority: 'high',
+        executionDate: '2023-09-26',
       },
       {
         id: 2,
-        title: "Complete Project Proposal",
-        content: "Prepare and submit the project proposal document.",
-        priority: "medium",
-        executionDate: "2023-09-28",
+        title: 'Complete Project Proposal',
+        content: 'Prepare and submit the project proposal document.',
+        priority: 'medium',
+        executionDate: '2023-09-28',
       },
       {
         id: 3,
-        title: "Meeting with Client",
-        content: "Discuss project requirements and timelines with the client.",
-        priority: "high",
-        executionDate: "2023-09-27",
+        title: 'Meeting with Client',
+        content: 'Discuss project requirements and timelines with the client.',
+        priority: 'high',
+        executionDate: '2023-09-27',
       },
       {
         id: 4,
-        title: "Update Portfolio",
-        content: "Add recent projects to the portfolio website.",
-        priority: "low",
-        executionDate: "2023-09-30",
+        title: 'Update Portfolio',
+        content: 'Add recent projects to the portfolio website.',
+        priority: 'low',
+        executionDate: '2023-09-30',
       },
     ]);
 
     // Defines the status of the v-dialog (open/closed)
     const todoCreation = ref<boolean>(false);
     const priorityItems = ref<PriorityItem[]>([
-      { fr: "haute", en: "high" },
-      { fr: "moyenne", en: "medium" },
-      { fr: "basse", en: "low" },
+      { fr: 'haute', en: 'high' },
+      { fr: 'moyenne', en: 'medium' },
+      { fr: 'basse', en: 'low' },
     ]);
 
     const formValues = ref<FormValues>({
@@ -156,21 +156,21 @@ export default {
     });
 
     const titleRules = [
-      (v: string) => !!v || "Le titre ne peut pas être vide.",
+      (v: string) => !!v || 'Le titre ne peut pas être vide.',
       (v: string) =>
         (v.length && v.length <= 50) ||
-        "Le titre doit contenir moins de 50 caractères.",
+        'Le titre doit contenir moins de 50 caractères.',
     ];
 
     const contentRules = [
-      (v: string) => !!v || "Le contenu ne peut pas être vide.",
+      (v: string) => !!v || 'Le contenu ne peut pas être vide.',
       (v: string) =>
         (v.length && v.length <= 256) ||
-        "Le contenu doit contenir moins de 256 caractères.",
+        'Le contenu doit contenir moins de 256 caractères.',
     ];
 
     const priorityRules = [
-      (v: string) => !!v || "Veuillez sélectionner une priorité.",
+      (v: string) => !!v || 'Veuillez sélectionner une priorité.',
     ];
 
     // Methods
@@ -195,7 +195,7 @@ export default {
         return;
       if (!formValues.value.priority) return;
 
-      console.log("Submitting form to backend...");
+      console.log('Submitting form to backend...');
       console.log(formValues.value);
     };
 

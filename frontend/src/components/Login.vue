@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue';
 
 interface LoginCredentials {
   login: string | null;
@@ -65,7 +65,7 @@ interface LoginCredentials {
 }
 
 export default {
-  name: "LoginComponent",
+  name: 'LoginComponent',
   setup() {
     const formLoading = ref(false);
     const showPassword = ref(false);
@@ -77,7 +77,7 @@ export default {
     const postLogin = async () => {
       formLoading.value = true;
       try {
-        console.log("Sending login request to backend...");
+        console.log('Sending login request to backend...');
         console.log(loginCredentials.value);
         formLoading.value = false;
       } catch (error) {
