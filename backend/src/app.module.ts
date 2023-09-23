@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalStrategy } from './auth/jwt.strategy';
 import { PrismaService } from './prisma.service';
+import { TodosModule } from './todos/todos.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PrismaService } from './prisma.service';
         signOptions: { expiresIn: '3600s' },
       }),
     }),
+    TodosModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, AuthService, LocalStrategy],
