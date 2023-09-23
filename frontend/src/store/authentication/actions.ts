@@ -15,7 +15,6 @@ export const actions: ActionTree<ProfileState, RootState> = {
       cookies.remove('token'); // just in case
       removeAxiosToken();
       commit('CLEAR_AUTH');
-      console.log('TOKEN NOT IN COOKIES');
       return;
     }
     dispatch('verifyToken', cookiesToken)
@@ -23,11 +22,9 @@ export const actions: ActionTree<ProfileState, RootState> = {
         // The token is valid : add it again to axios config just in case
         setAxiosToken(cookiesToken);
         dispatch('fetchUserInfo');
-        console.log('TOKEN IN COOKIES IS VALID');
       })
       .catch(() => {
         // If not valid, logout
-        console.log('TOKEN IN COOKIES IS NOT VALID');
         cookies.remove('token'); // just in case
         removeAxiosToken();
         commit('CLEAR_AUTH');
