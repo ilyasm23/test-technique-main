@@ -39,7 +39,6 @@ export class TodosController {
 
   @Delete(':id')
   deleteTodoById(@Param('id', ParseIntPipe) id: string) {
-    //TODO : Transfer the error handling here instead of doing it in the service.
     return this.todoService.remove(id);
   }
 }

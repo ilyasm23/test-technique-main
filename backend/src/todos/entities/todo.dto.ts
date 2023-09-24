@@ -11,6 +11,7 @@ export class TodoDTO {
 
   @IsNotEmpty()
   @IsString()
+  //TODO : Add a verification that the priority equals 'low', 'medium' or 'high' only.
   priority!: string;
 
   @IsOptional()
@@ -26,5 +27,5 @@ export class TodoResponse {
   title!: string;
   content!: string;
   priority!: string;
-  executionDate?: Date;
+  executionDate?: string;
 }

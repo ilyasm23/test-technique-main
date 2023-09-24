@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginPayload, LoginResponse, User } from './entities/login.interface';
 
@@ -23,5 +23,14 @@ export class AuthService {
   login(user: User): LoginResponse {
     const payload = { email: user.email };
     return new LoginResponse(this.jwtService.sign(payload), user);
+  }
+
+  verify(token: string): any {
+    try {
+      this.jwtService.verify(token);
+      return { message: 'The token is valid' };
+    } catch (e) {
+      throw new UnauthorizedException('Token is invalid or expired');
+    }
   }
 }

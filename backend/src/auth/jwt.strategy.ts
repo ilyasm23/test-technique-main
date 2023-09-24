@@ -8,6 +8,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
+      //TODO : Add the secret to a .env file.
       secretOrKey: 'secret',
     });
   }
