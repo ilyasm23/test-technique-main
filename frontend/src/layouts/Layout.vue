@@ -12,11 +12,23 @@
 </template>
 
 <script lang="ts">
+import { useRouter } from 'vue-router';
+import { store } from '../store/index';
+
 export default {
   name: 'LayoutComponent',
   setup() {
+    const router = useRouter();
     const handleLogout = (): void => {
-      console.log('Logging out...');
+      store
+        .dispatch('authenticationModule/logout')
+        .then(() => {
+          router.push('/login');
+        })
+        .catch(() => {
+          //TODO : Replace this with a notification handler
+          console.log('Failed to logout...');
+        });
     };
     return { handleLogout };
   },

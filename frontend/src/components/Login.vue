@@ -4,11 +4,11 @@
       <v-col class="d-flex justify-center align-center h-100" cols="12">
         <v-card class="form-container pa-3">
           <h2 class="login-title">Connexion</h2>
-          <v-form class="form-login" @submit.prevent="postLogin">
+          <v-form @submit.prevent="postLogin">
             <v-text-field
-              v-model="loginCredentials.login"
-              autocomplete="username"
-              name="login"
+              v-model="loginCredentials.email"
+              autocomplete="email"
+              name="email"
               type="text"
               variant="underlined"
               clearable
@@ -40,7 +40,7 @@
               <v-btn
                 type="submit"
                 :disabled="
-                  !(loginCredentials.password && loginCredentials.login)
+                  !(loginCredentials.password && loginCredentials.email)
                 "
                 :loading="formLoading"
                 color="#A18276"
@@ -58,9 +58,11 @@
 
 <script lang="ts">
 import { ref } from 'vue';
+import { store } from '../store/index';
+import { useRouter } from 'vue-router';
 
 interface LoginCredentials {
-  login: string | null;
+  email: string | null;
   password: string | null;
 }
 
@@ -70,15 +72,24 @@ export default {
     const formLoading = ref(false);
     const showPassword = ref(false);
     const loginCredentials = ref<LoginCredentials>({
-      login: null,
+      email: null,
       password: null,
     });
+
+    const router = useRouter();
 
     const postLogin = async () => {
       formLoading.value = true;
       try {
-        console.log('Sending login request to backend...');
-        console.log(loginCredentials.value);
+        store
+          .dispatch('authenticationModule/login', loginCredentials.value)
+          .then(() => {
+            router.push('/');
+          })
+          .catch(() => {
+            //TODO : Replace this with a notification handler
+            console.log('Failed to login...');
+          });
         formLoading.value = false;
       } catch (error) {
         formLoading.value = false;
