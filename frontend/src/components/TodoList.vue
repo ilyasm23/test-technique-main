@@ -1,31 +1,32 @@
 <template>
-  <v-container>
-    <v-row v-for="todo in todos" :key="todo.id">
+  <v-container
+    class="todo-list-container d-flex flex-column justify-space-between"
+  >
+    <v-row>
       <v-col>
-        <br />
-        <TodoComponent :todo="todo" />
+        <v-row v-for="todo in displayedTodos" :key="todo.id">
+          <v-col>
+            <br />
+            <TodoComponent :todo="todo" />
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col class="d-flex justify-space-between" cols="6">
+    <v-row class="buttons-row">
+      <v-col class="d-flex justify-space-between align-center" cols="12">
         <v-btn @click="todoCreation = true" class="bg-green">
           Ajouter une tâche
         </v-btn>
-        <div>Pagination</div>
+        <v-pagination v-model="currentPage" :length="todosCount"></v-pagination>
       </v-col>
     </v-row>
     <!-- //TODO : Transfer the content of the dialog in another component -->
-    <!-- the same way I did with TodoComponent and TodoList -->
+    <!-- the same way I divided TodoComponent and TodoList -->
     <v-dialog v-model="todoCreation" width="400">
       <v-card class="todo-creation-dialog">
         <v-card-title class="d-flex justify-space-between align-center">
           <div>Création d'une tâche</div>
-          <v-btn
-            class="user-info-close-icon"
-            icon="mdi-close"
-            elevation="0"
-            @click="handleCloseDialog"
-          />
+          <v-btn icon="mdi-close" elevation="0" @click="handleCloseDialog" />
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="createTodo" class="h-100">
@@ -89,15 +90,10 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
+import { store } from '../store/index';
+import { TodoForm, Todo } from '../store/todos/todos-types';
 import TodoComponent from './TodoComponent.vue';
-
-interface FormValues {
-  title: string | null;
-  content: string | null;
-  executionDate: string | null;
-  priority: string | null;
-}
 
 interface PriorityItem {
   fr: string;
@@ -108,51 +104,22 @@ export default {
   name: 'TodoList',
   components: { TodoComponent },
   setup() {
-    // Data
-    const todos = ref([
-      {
-        id: 1,
-        title: 'Learn Vue 3',
-        content: 'Vue 3 course',
-        priority: 'high',
-        executionDate: '2023-09-26',
-      },
-      {
-        id: 2,
-        title: 'Complete Project Proposal',
-        content: 'Prepare and submit the project proposal document.',
-        priority: 'medium',
-        executionDate: '2023-09-28',
-      },
-      {
-        id: 3,
-        title: 'Meeting with Client',
-        content: 'Discuss project requirements and timelines with the client.',
-        priority: 'high',
-        executionDate: '2023-09-27',
-      },
-      {
-        id: 4,
-        title: 'Update Portfolio',
-        content: 'Add recent projects to the portfolio website.',
-        priority: 'low',
-        executionDate: '2023-09-30',
-      },
-    ]);
-
-    // Defines the status of the v-dialog (open/closed)
-    const todoCreation = ref<boolean>(false);
     const priorityItems = ref<PriorityItem[]>([
       { fr: 'haute', en: 'high' },
       { fr: 'moyenne', en: 'medium' },
       { fr: 'basse', en: 'low' },
     ]);
+    // Used for the pagination
+    const itemsPerPage = ref<number>(5);
+    const currentPage = ref<number>(1);
+    // Defines the status of the v-dialog (open/closed)
+    const todoCreation = ref<boolean>(false);
 
-    const formValues = ref<FormValues>({
+    const formValues = ref<TodoForm>({
       title: null,
       content: null,
-      executionDate: null,
       priority: null,
+      executionDate: null,
     });
 
     const titleRules = [
@@ -189,24 +156,56 @@ export default {
     };
 
     const createTodo = (): void => {
-      //TODO : Add notifications instead of the simple "return"
       if (!formValues.value.title || formValues.value.title.length > 50) return;
       if (!formValues.value.content || formValues.value.content.length > 256)
         return;
       if (!formValues.value.priority) return;
+      //TODO : Add notifications above instead of only returning
 
-      console.log('Submitting form to backend...');
-      console.log(formValues.value);
+      store
+        .dispatch('todosModule/createTodo', formValues.value)
+        .then(() => {
+          //TODO : Handle notifications here
+          console.log('Todo successfully created...');
+          handleCloseDialog();
+        })
+        .catch(() => {
+          console.log('Error while creating Todo...');
+        });
     };
+
+    const todos = computed<Todo[]>(() => {
+      return store.getters['todosModule/getTodos'];
+    });
+
+    const todosCount = computed(() => {
+      return Math.ceil(todos.value.length / itemsPerPage.value);
+    });
+
+    /**
+     * Handles displaying the right amount of TODOs per page (used for the pagination).
+     */
+    const displayedTodos = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage.value;
+      const end = start + itemsPerPage.value;
+      return todos.value.slice(start, end);
+    });
+
+    onMounted(() => {
+      store.dispatch('todosModule/fetchTodos');
+    });
 
     return {
       todos,
+      displayedTodos,
       todoCreation,
       priorityItems,
       formValues,
       titleRules,
       contentRules,
       priorityRules,
+      todosCount,
+      currentPage,
       handleCloseDialog,
       createTodo,
     };
@@ -214,6 +213,13 @@ export default {
 };
 </script>
 <style>
+.todo-list-container {
+  height: 90vh;
+}
+
+.buttons-row {
+  max-height: 100px;
+}
 .todo-creation-dialog {
   width: 450px;
   height: 440px;
