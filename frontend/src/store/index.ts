@@ -1,9 +1,7 @@
 import Vuex from 'vuex';
-import { authenticationModule } from './authentication/authentication';
 import { RootState } from './types';
-// import { Store } from 'vuex';
-// import { InjectionKey } from 'vue';
-// import { ProfileState } from './authentication/authentication-types';
+import { authenticationModule } from './authentication/authentication';
+import { todosModule } from './todos/todos';
 
 export const store = new Vuex.Store<RootState>({
   state: {
@@ -11,7 +9,6 @@ export const store = new Vuex.Store<RootState>({
   },
   modules: {
     authenticationModule,
+    todosModule,
   },
 });
-
-// export const authenticationKey: InjectionKey<Store<ProfileState>> = Symbol();
