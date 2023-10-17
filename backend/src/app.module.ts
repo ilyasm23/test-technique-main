@@ -2,21 +2,26 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { PrismaModule } from 'nestjs-prisma';
 import config from 'src/common/configs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalStrategy } from './auth/jwt.strategy';
-import { PrismaService } from './prisma.service';
-import { TodosModule } from './todos/todos.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { TodosResolver } from './todos/todos.resolver';
+import { PostgresService } from './postgres.service';
+import { TodosService } from './todos/todos.service';
+// import { TodosModule } from './todos/todos.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
-    PrismaModule.forRoot({
-      isGlobal: true,
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
     }),
+
     PassportModule,
     JwtModule.registerAsync({
       useFactory: async () => ({
@@ -24,9 +29,16 @@ import { TodosModule } from './todos/todos.module';
         signOptions: { expiresIn: '3600s' },
       }),
     }),
-    TodosModule,
+    // TodosModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, AuthService, LocalStrategy],
+  providers: [
+    AppService,
+    AuthService,
+    LocalStrategy,
+    TodosResolver,
+    PostgresService,
+    TodosService,
+  ],
 })
 export class AppModule {}
