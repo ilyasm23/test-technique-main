@@ -1,8 +1,37 @@
-import { IsString, IsNotEmpty, IsOptional, Matches } from 'class-validator';
-import { ObjectType, Field } from '@nestjs/graphql';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  Matches,
+  IsNumber,
+  IsEnum,
+} from 'class-validator';
+import { ObjectType, Field, InputType } from '@nestjs/graphql';
 
 @ObjectType()
 export class TodoModel {
+  @Field()
+  @IsNumber()
+  id!: number;
+
+  @Field()
+  @IsString()
+  title!: string;
+
+  @Field()
+  @IsString()
+  content!: string;
+
+  @Field()
+  @IsString()
+  priority!: string;
+
+  @Field({ nullable: true })
+  execution_date?: string;
+}
+
+@InputType()
+export class TodoPayload {
   @Field()
   @IsNotEmpty()
   @IsString()
@@ -15,8 +44,9 @@ export class TodoModel {
 
   @Field()
   @IsNotEmpty()
-  @IsString()
-  //TODO : Add a verification that the priority equals 'low', 'medium' or 'high' only.
+  @IsEnum(['low', 'medium', 'high'], {
+    message: 'Priority must be either "low", "medium" or "high"',
+  })
   priority!: string;
 
   @Field({ nullable: true })
