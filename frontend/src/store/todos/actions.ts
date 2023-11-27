@@ -1,15 +1,28 @@
 import { ActionTree, ActionContext } from 'vuex';
 import { ProfileState } from './todos-types';
 import { RootState } from '../types';
-import { axiosInstance as axios } from '../../axios';
 import { TodoForm } from './todos-types';
+import apolloClient from '../../graphql';
+import gql from 'graphql-tag';
 
 export const actions: ActionTree<ProfileState, RootState> = {
   fetchTodos(context: ActionContext<ProfileState, RootState>) {
-    return axios
-      .get('/todos')
+    return apolloClient
+      .query({
+        query: gql`
+          query {
+            todos {
+              id
+              title
+              content
+              priority
+              execution_date
+            }
+          }
+        `,
+      })
       .then((response) => {
-        context.commit('SET_TODOS', response.data);
+        context.commit('SET_TODOS', response.data.todos);
         return Promise.resolve(response);
       })
       .catch((e) => {
@@ -20,8 +33,28 @@ export const actions: ActionTree<ProfileState, RootState> = {
     { dispatch }: ActionContext<ProfileState, RootState>,
     todo: TodoForm,
   ) {
-    return axios
-      .post('/todos', todo)
+    return apolloClient
+      .mutate({
+        mutation: gql`
+          mutation createTodo($todo: TodoPayload!) {
+            createTodo(TodoData: $todo) {
+              id
+              title
+              content
+              priority
+              execution_date
+            }
+          }
+        `,
+        variables: {
+          todo: {
+            title: todo.title,
+            content: todo.content,
+            priority: todo.priority,
+            execution_date: todo.executionDate,
+          },
+        },
+      })
       .then((response) => {
         dispatch('fetchTodos');
         return Promise.resolve(response);
@@ -31,8 +64,17 @@ export const actions: ActionTree<ProfileState, RootState> = {
       });
   },
   deleteTodo({ dispatch }: ActionContext<ProfileState, RootState>, id: number) {
-    return axios
-      .delete(`/todos/${id}`)
+    return apolloClient
+      .mutate({
+        mutation: gql`
+          mutation deleteTodo($id: Int!) {
+            deleteTodo(id: $id)
+          }
+        `,
+        variables: {
+          id: id,
+        },
+      })
       .then((response) => {
         dispatch('fetchTodos');
         return Promise.resolve(response);

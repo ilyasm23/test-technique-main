@@ -61,6 +61,22 @@ Il s'articule autour d'une interface utilisateur où les utilisateurs peuvent s'
 
    Le serveur backend devrait maintenant être en cours d'exécution et écouter sur un port spécifique (généralement `3000`).
 
+### Base de données
+
+S'assurer que le volume n'est pas déjà créé :
+docker volume rm database_db_data
+
+Lancer le container :
+docker-compose up -d
+
+Dans le répertoire database, run ça pour copier le script dans le container
+docker cp .\init_script.sql db:/
+
+Puis run ça pour exécuter le script d'initialisation de la BD :
+docker exec -it db psql -U Kresus -d todos -f /init_script.sql
+
+Accéder à la base de données avec les identifiants présents dans .env
+
 ## Exécution des tests unitaires du Backend
 
 Pour exécuter les tests unitaires du backend, suivez les étapes ci-dessous :

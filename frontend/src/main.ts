@@ -1,8 +1,10 @@
-import { createApp } from 'vue';
+import { createApp, provide, h } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { axiosInstance as axios } from './axios';
 import { store } from './store';
+import { DefaultApolloClient } from '@vue/apollo-composable';
+import apolloClient from './graphql';
 // Vuetify and global components
 import { createVuetify } from 'vuetify';
 import 'vuetify/styles';
@@ -76,7 +78,13 @@ const vuetify = createVuetify({
   },
 });
 
-const app = createApp(App);
+const app = createApp({
+  setup() {
+    provide(DefaultApolloClient, apolloClient);
+  },
+
+  render: () => h(App),
+});
 
 app.component('VueDatePicker', VueDatePicker);
 

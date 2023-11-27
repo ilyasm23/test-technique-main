@@ -29,7 +29,6 @@ export class TodosService {
       `,
       values: [title, content, priority, execution_date],
     });
-    console.log(resCreation);
     let res;
     if (resCreation.rows.length == 1) {
       res = await this.postgresService.getClient().query({
