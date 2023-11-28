@@ -24,8 +24,8 @@ jobs:
         run: npx playwright install --with-deps
       - name: Start Frontend
         run: npm run serve &
-      - name: Wait for Frontend to Start
-        run: sleep 10 && echo "Frontend started"
+      # - name: Wait for Frontend to Start
+      #   run: sleep 10 && echo "Frontend started"
       - name: Run Playwright tests
         env:
           VUE_APP_BASE_URL: ${{ secrets.VUE_APP_BASE_URL }}
