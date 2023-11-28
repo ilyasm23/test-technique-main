@@ -8,7 +8,7 @@ import {
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // Absolute URL here
-  uri: 'http://localhost:3000/graphql',
+  uri: process.env.VUE_APP_GRAPHQL_URL,
 });
 
 // Disable the cache

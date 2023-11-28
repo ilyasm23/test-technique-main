@@ -4,7 +4,7 @@ module.exports = {
     service: {
       name: 'test-technique',
       // URL to the GraphQL API
-      url: 'http://localhost:3000/graphql',
+      url: process.env.VUE_APP_GRAPHQL_URL,
     },
     // Files processed by the extension
     includes: ['src/**/*.vue', 'src/**/*.ts'],
