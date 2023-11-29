@@ -27,7 +27,7 @@ jobs:
       - name: Build Frontend
         run: npm run build
       - name: Start Frontend
-        run: serve -s dist
+        run: serve -s dist -p 8080
       - name: Run Playwright tests
         env:
           VUE_APP_BASE_URL: ${{ secrets.VUE_APP_BASE_URL }}
