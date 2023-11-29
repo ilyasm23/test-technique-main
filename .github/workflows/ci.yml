@@ -20,12 +20,14 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm ci
+      - name: Add HTTP server
+        run: npm install -g serve
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Build Frontend
+        run: npm run build
       - name: Start Frontend
-        run: npm run serve &
-      # - name: Wait for Frontend to Start
-      #   run: sleep 10 && echo "Frontend started"
+        run: serve -s dist
       - name: Run Playwright tests
         env:
           VUE_APP_BASE_URL: ${{ secrets.VUE_APP_BASE_URL }}
